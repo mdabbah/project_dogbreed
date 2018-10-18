@@ -12,7 +12,6 @@ num_classes = 120
 weights = r'..\keras-pretrained-models\resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5'
 base_model = ka.ResNet50(include_top=False, weights=weights, classes=num_classes, pooling='avg')
 x = base_model.output
-x = GlobalAveragePooling2D()(x)
 # let's add a fully-connected layer
 x = Dense(1024, activation='relu')(x)
 # and a logistic layer -- let's say we have 200 classes

@@ -15,12 +15,12 @@ class MYGenerator(keras.utils.Sequence):
         filenames = [os.path.splitext(file)[0] for file in filenames]
         labels = pd.read_csv(labels_file)
         labels = labels.loc[labels['id']==filenames]
-        labels = np.array(labels['breed_id'])
+        labels = np.array(labels['breed_id'], np.int)
         self.image_filenames, self.labels = image_filenames, labels
         self.batch_size = batch_size
 
     def __len__(self):
-        return np.ceil(len(self.image_filenames) / float(self.batch_size))
+        return np.int(np.ceil(len(self.image_filenames) / float(self.batch_size)))
 
     def __getitem__(self, idx):
         batch_x = self.image_filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
