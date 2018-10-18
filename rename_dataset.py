@@ -1,17 +1,11 @@
-import os
-import sys
 import pandas as pd
+import numpy as np
 
+labels = pd.read_csv('..\labels.csv')
+labels['breed_id'] = np.nan
+classes = list(set(labels['breed']))
 
-dataset_base_dir = r'../dataset'
-counter = 0
-labels = pd.read_csv('../labels')
+for c in classes:
+    labels.loc[labels['breed'] == c, ['breed_id']] = np.int(classes.index(c))
 
-for f in os.listdir(dataset_base_dir):
-
-    if os.path.isdir(f):
-        new_folder = os.path.join(dataset_base_dir, f + '_renamed')
-        old_folder = os.path.join(dataset_base_dir, f)
-        os.mkdir(new_folder)
-        num_files = copyfiles(new_folder, old_folder, counter, labels)
-        counter += num_files
+labels.to_csv('..\label_updated.csv', index=False)

@@ -2,11 +2,20 @@ from skimage.io import imread
 from skimage.transform import resize
 import numpy as np
 import keras.utils
+import os
+import pandas as pd
 
 
 class MYGenerator(keras.utils.Sequence):
 
-    def __init__(self, image_filenames, labels, batch_size):
+    def __init__(self, train_folder, labels_file, batch_size):
+
+        filenames = os.listdir(train_folder)
+        image_filenames = [os.path.join(train_folder, im_file) for im_file in filenames]
+        filenames = [os.path.splitext(file)[0] for file in filenames]
+        labels = pd.read_csv(labels_file)
+        labels = labels.loc[labels['id']==filenames]
+        labels = np.array(labels['breed_id'])
         self.image_filenames, self.labels = image_filenames, labels
         self.batch_size = batch_size
 
