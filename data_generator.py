@@ -16,6 +16,7 @@ class MYGenerator(keras.utils.Sequence):
         labels = pd.read_csv(labels_file)
         labels = labels.loc[labels['id']==filenames]
         labels = np.array(labels['breed_id'], np.int)
+        self.num_of_classes = len(set(labels))
         self.image_filenames, self.labels = image_filenames, labels
         self.batch_size = batch_size
 
@@ -26,6 +27,8 @@ class MYGenerator(keras.utils.Sequence):
         batch_x = self.image_filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
         batch_y = self.labels[idx * self.batch_size:(idx + 1) * self.batch_size]
 
+        batch_y_hot1mat = np.zeros([self.num_of_classes, self.batch_size])
+        batch_y_hot1mat[batch_y, range(self.batch_size)] = 1
         return np.array([
             resize(imread(file_name), (200, 200))
-               for file_name in batch_x]), np.array(batch_y)
+            for file_name in batch_x]), np.transpose(batch_y_hot1mat)
