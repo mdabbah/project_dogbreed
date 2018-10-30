@@ -7,7 +7,16 @@ from keras.layers import Dense, GlobalAveragePooling2D
 from keras import backend as K
 from data_generator import MYGenerator
 import os
+import smtplib
 
+# Gmail Sign In
+gmail_sender = 'project.doogbreed@gmail.com'
+gmail_passwd = 'Pass4D0GBreed'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()
+server.starttls()
+server.login(gmail_sender, gmail_passwd)
 
 if __name__ == '__main__':
 
@@ -31,7 +40,7 @@ if __name__ == '__main__':
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
 
-    batch_size = 4
+    batch_size = 32
     train_folder = r'..\train'
     labels_file='..\label_updated.csv'
     my_training_batch_generator = MYGenerator(train_folder=train_folder, labels_file=labels_file,
@@ -42,7 +51,13 @@ if __name__ == '__main__':
                         epochs=100,
                         verbose=1,
                         use_multiprocessing=True,
-                        workers=4,
+                        workers=16,
                         max_queue_size=32)
 
-    model.save(r'..\my_model.h5')
+    model.save(r'..\trained_resnet.h5')
+
+    try:
+        server.sendmail(gmail_sender, ['m.m.dabbah@gmail.com'], 'training has finished')
+        print('email sent')
+    except:
+        print('error sending mail')

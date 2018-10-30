@@ -30,5 +30,5 @@ class MYGenerator(keras.utils.Sequence):
         batch_y_hot1mat = np.zeros([self.num_of_classes, self.batch_size])
         batch_y_hot1mat[batch_y, range(self.batch_size)] = 1
         return np.array([
-            resize(imread(file_name), (200, 200))
+            resize(imread(file_name), (224, 224))
             for file_name in batch_x]), np.transpose(batch_y_hot1mat)
