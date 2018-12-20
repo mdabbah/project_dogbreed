@@ -60,7 +60,7 @@ def split_data(dataset_folder: str, labels_file: str,
 
     move_examples(dataset_folder, new_training_folder, new_order, 0, num_training_examples, label_table)
     move_examples(dataset_folder, new_validation_folder, new_order, num_training_examples, num_validation_examples, label_table)
-    move_examples(dataset_folder, new_test_folder, new_order, num_validation_examples, num_test_examples, label_table)
+    move_examples(dataset_folder, new_test_folder, new_order, num_training_examples + num_validation_examples, num_test_examples, label_table)
 
 
 
