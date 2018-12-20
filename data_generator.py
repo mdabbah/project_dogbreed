@@ -4,6 +4,7 @@ import numpy as np
 import keras.utils
 import os
 import pandas as pd
+from keras.applications.resnet50 import preprocess_input
 
 
 class MYGenerator(keras.utils.Sequence):
@@ -27,8 +28,8 @@ class MYGenerator(keras.utils.Sequence):
         batch_x = self.image_filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
         batch_y = self.labels[idx * self.batch_size:(idx + 1) * self.batch_size]
 
-        batch_y_hot1mat = np.zeros([self.num_of_classes, self.batch_size])
-        batch_y_hot1mat[batch_y, range(self.batch_size)] = 1
+        batch_y_hot1mat = keras.utils.to_categorical(batch_y, 120)
+
         return np.array([
-            resize(imread(file_name), (224, 224))
-            for file_name in batch_x]), np.transpose(batch_y_hot1mat)
+            resize(preprocess_input(imread(file_name)), (224, 224))
+            for file_name in batch_x]), batch_y_hot1mat

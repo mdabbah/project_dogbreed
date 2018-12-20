@@ -8,6 +8,7 @@ from keras import backend as K
 from data_generator import MYGenerator
 import os
 import smtplib
+import keras.callbacks
 
 # Gmail Sign In
 gmail_sender = 'project.doogbreed@gmail.com'
@@ -42,17 +43,22 @@ if __name__ == '__main__':
 
     batch_size = 32
     train_folder = r'..\train'
-    labels_file='..\label_updated.csv'
+    labels_file = '..\label_updated.csv'
     my_training_batch_generator = MYGenerator(train_folder=train_folder, labels_file=labels_file,
                                               batch_size=batch_size)
+
+    check_point_callback = keras.callbacks.ModelCheckpoint\
+        (r'..\trained _resnet_partial_2\resnet50.{epoch:02d}-{loss:.2f}-{acc:.2f}.hdf5')
     num_training_samples = os.listdir(train_folder).__len__()
+
     model.fit_generator(generator=my_training_batch_generator,
                         steps_per_epoch=(num_training_samples // batch_size),
                         epochs=100,
                         verbose=1,
                         use_multiprocessing=True,
                         workers=16,
-                        max_queue_size=32)
+                        max_queue_size=32,
+                        callbacks=[check_point_callback])
 
     model.save(r'..\trained_resnet.h5')
 
