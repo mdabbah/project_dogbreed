@@ -29,7 +29,7 @@ class MYGenerator(keras.utils.Sequence):
         batch_y = self.labels[idx * self.batch_size:(idx + 1) * self.batch_size]
 
         labels = keras.utils.to_categorical(batch_y, num_classes=120)
-        #print(labels.shape)
+
         return np.array([
             resize(preprocess_input(imread(file_name)), (224, 224))
             for file_name in batch_x]), labels
