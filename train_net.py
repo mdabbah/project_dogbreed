@@ -31,7 +31,7 @@ base_models = {
     'resnet50': (ka.ResNet50,  r'..\keras-pretrained-models\resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5',
                  ka.resnet50.preprocess_input),
 
-    'inception': (ka.InceptionV3,  r'..\keras-pretrained-models\resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5',
+    'inception': (ka.InceptionV3, r'..\keras-pretrained-models\inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5',
                  ka.inception_v3.preprocess_input),
 
     'vgg19': (ka.VGG19,  r'..\keras-pretrained-models\resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5',
@@ -55,16 +55,17 @@ def save_stats(msg):
     with open('stats.txt', 'a') as f:
         f.write(str(msg))
 
+
 if __name__ == '__main__':
 
     logger = Logger('log.txt')
 
 
     num_classes = 120
-    base_mode_name = 'resnet50'
+    base_mode_name = 'vgg19'
 
     base_model_constructor = base_models[base_mode_name][0]
-    weights_path =  base_models[base_mode_name][1]
+    weights_path = 'imagenet'  # base_models[base_mode_name][1]
     base_model_pre_process = base_models[base_mode_name][2]
 
     # batch_size = 32
