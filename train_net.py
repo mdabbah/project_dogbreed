@@ -10,18 +10,9 @@ import os
 import smtplib
 import keras.callbacks
 from keras.layers import Input
-import time
+import time, datetime
 from keras.models import load_model
 
-
-# Gmail Sign In
-gmail_sender = 'project.doogbreed@gmail.com'
-gmail_passwd = 'Pass4D0GBreed'
-
-server = smtplib.SMTP('smtp.gmail.com', 587)
-server.ehlo()
-server.starttls()
-server.login(gmail_sender, gmail_passwd)
 
 nets = {'resnet50': (ka.ResNet50, ka.resnet50.preprocess_input, ka.resnet50.decode_predictions),
             'inception': (ka.InceptionV3, ka.inception_v3.preprocess_input, ka.inception_v3.decode_predictions),
@@ -47,6 +38,7 @@ class Logger:
     def log(self, msg):
 
         with open(self.log_file_name, 'a') as f:
+            str(datetime.datetime.today())
             f.write(str(msg))
 
 
@@ -113,12 +105,13 @@ if __name__ == '__main__':
     partially_trained_folder = os.path.join(r'./models/partially_trained_models', base_mode_name)
     os.makedirs(partially_trained_folder, exist_ok=True)
     save_models_names_format = os.path.join(partially_trained_folder, base_mode_name +
-                                            '{epoch:02d}-{loss:.2f}-{acc:.2f}-{loss: .3f}.hdf5')
+                                            '{epoch:02d}-{loss:.2f}-{acc:.2f}-{loss: .3f}'
+                                            '{val_acc:.2f}-{val_loss: .3f}.hdf5')
     check_point_callback = keras.callbacks.ModelCheckpoint\
         (save_models_names_format)
 
     num_training_samples = os.listdir(train_folder).__len__()
-    logger.log('{:} starting training with base model {:}'.format(time.time(), base_mode_name))
+    logger.log('starting training with base model {:}'.format(base_mode_name))
     model.fit_generator(generator=my_training_batch_generator,
                         validation_data=my_validation_batch_generator,
                         steps_per_epoch=(num_training_samples // batch_size),
@@ -129,7 +122,7 @@ if __name__ == '__main__':
                         max_queue_size=32,
                         callbacks=[check_point_callback])
 
-    logger.log('{:} finished training with {:}'.format(time.time(), base_mode_name))
+    logger.log('finished training with {:}'.format(base_mode_name))
     logger.log('weights for model{:} before saving:'.format(base_mode_name))
     logger.log(model.weights)
 
@@ -144,16 +137,36 @@ if __name__ == '__main__':
 
     trained_folder = os.path.join(r'./models/trained_models', base_mode_name)
     os.makedirs(partially_trained_folder, exist_ok=True)
-    model_save_path = os.path.join(trained_folder, 'trained_{:}_{:}.h5'.format(base_mode_name, time.time()))
+    model_save_path = os.path.join(trained_folder, 'trained_{:}_{:}.h5'.format(base_mode_name,
+                                                                               datetime.datetime.today()))
     model.save(model_save_path)
 
     del model
 
     model = load_model(model_save_path)
-    logger.log(' saved model .. now deleting it .. loding and printing weights')
+    logger.log('saved model .. now deleting it .. loading and printing weights')
     logger.log(model.weights)
 
+    loss, acc = model.evaluate_generator(generator=my_test_batch_generator,
+                                         verbose=1,
+                                         steps=1,
+                                         use_multiprocessing=True,
+                                         workers=16,
+                                         max_queue_size=32)
+
+    logger.log('loaded model {:} evaluated on test set: acc{:}, loss{:}'.format(base_mode_name, acc, loss))
+
     try:
+
+        # Gmail Sign In
+        gmail_sender = 'project.doogbreed@gmail.com'
+        gmail_passwd = 'Pass4D0GBreed'
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.login(gmail_sender, gmail_passwd)
+
         server.sendmail(gmail_sender, ['m.m.dabbah@gmail.com'], 'training has finished')
         print('email sent')
     except:
