@@ -4,3 +4,6 @@
 *.jpg
 *.pyc
 *.pyc
+.idea/
+./venv/*
+./data/train_0.8/

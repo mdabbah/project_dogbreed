@@ -6,10 +6,11 @@ from keras.layers import Input, Dense, Convolution2D, MaxPooling2D, AveragePooli
 from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 from keras import backend as K
-
+import os
 from sklearn.metrics import log_loss
-
-from load_cifar10 import load_cifar10_data
+from data_generator import MYGenerator
+import smtplib
+import keras.callbacks
 
 
 def conv2d_bn(x, nb_filter, nb_row, nb_col,
@@ -215,6 +216,14 @@ def inception_v3_model(img_rows, img_cols, channel=1, num_classes=None):
 
     return model
 
+# Gmail Sign In
+gmail_sender = 'project.doogbreed@gmail.com'
+gmail_passwd = 'Pass4D0GBreed'
+
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.ehlo()
+server.starttls()
+server.login(gmail_sender, gmail_passwd)
 
 if __name__ == '__main__':
 
@@ -222,9 +231,9 @@ if __name__ == '__main__':
 
     img_rows, img_cols = 299, 299 # Resolution of inputs
     channel = 3
-    num_classes = 10
-    batch_size = 16
-    nb_epoch = 10
+    num_classes = 120
+    batch_size = 32
+    nb_epoch = 100
 
     # Load Cifar10 data. Please implement your own load_data() module for your own dataset
     X_train, Y_train, X_valid, Y_valid = load_cifar10_data(img_rows, img_cols)
@@ -233,13 +242,31 @@ if __name__ == '__main__':
     model = inception_v3_model(img_rows, img_cols, channel, num_classes)
 
     # Start Fine-tuning
-    model.fit(X_train, Y_train,
-              batch_size=batch_size,
-              nb_epoch=nb_epoch,
-              shuffle=True,
-              verbose=1,
-              validation_data=(X_valid, Y_valid),
-              )
+    train_folder = r'..\train'
+    labels_file = '..\label_updated.csv'
+    my_training_batch_generator = MYGenerator(train_folder=train_folder, labels_file=labels_file,
+                                              batch_size=batch_size)
+
+    check_point_callback = keras.callbacks.ModelCheckpoint \
+        (r'..\trained _resnet_partial_2\resnet50.{epoch:02d}-{loss:.2f}-{acc:.2f}.hdf5')
+    num_training_samples = os.listdir(train_folder).__len__()
+
+    model.fit_generator(generator=my_training_batch_generator,
+                        steps_per_epoch=(num_training_samples // batch_size),
+                        epochs=100,
+                        verbose=1,
+                        use_multiprocessing=True,
+                        workers=16,
+                        max_queue_size=32,
+                        callbacks=[check_point_callback])
+
+    model.save(r'..\trained_resnet.h5')
+
+    try:
+        server.sendmail(gmail_sender, ['m.m.dabbah@gmail.com'], 'training has finished')
+        print('email sent')
+    except:
+        print('error sending mail')
 
     # Make predictions
     predictions_valid = model.predict(X_valid, batch_size=batch_size, verbose=1)
