@@ -7,4 +7,4 @@
 .idea/
 ./venv/*
 ./data/train_0.8/
-./models
+./models/*
