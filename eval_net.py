@@ -10,7 +10,7 @@ from tensorflow.python.client import device_lib
 
 if __name__ == '__main__':
 
-    model = load_model(r'..\resnet50.45-0.01-1.00_with_pre2.hdf5')
+    model = load_model(r'.\models\partially_trained_models\inception_resnet_v2\aaa.hdf5')
 
     print(device_lib.list_local_devices())
 
@@ -33,17 +33,17 @@ if __name__ == '__main__':
     if '-full_eval' in sys.argv:
         print('starting')
         batch_size = 32
-        train_folder = r'..\train'
-        labels_file = '..\label_updated.csv'
-        my_eval_batch_generator = MYGenerator(train_folder=train_folder, labels_file=labels_file,
-                                              batch_size=batch_size)
+        test_folder = r'./data/test_0.1'
+        labels_file = './data/test_0.1_labels.csv'
+        my_eval_batch_generator = MYGenerator(train_folder=test_folder, labels_file=labels_file,
+                                              batch_size=batch_size, preprocess_fun_name='inception_resnet_v2')
 
-        num_training_samples = os.listdir(train_folder).__len__()
+        num_training_samples = os.listdir(test_folder).__len__()
         loss, acc = model.evaluate_generator(generator=my_eval_batch_generator,
                                              verbose=1,
                                              steps=1,
                                              use_multiprocessing=True,
-                                             workers=16,
+                                             workers=4,
                                              max_queue_size=32)
 
         print('loss is:{0} acc is:{1}'.format(loss, acc))

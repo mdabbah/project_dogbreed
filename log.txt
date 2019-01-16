@@ -1,0 +1,35 @@
+2019-01-10 23:46:49.635467
+starting training with base model resnet50
+
+2019-01-11 03:16:46.599660
+finished training with resnet50
+
+2019-01-11 03:17:35.370469
+model resnet50 evaluated on test set: acc0.75, loss1.0123002529144287
+
+2019-01-11 11:08:18.689004
+starting training with base model inception
+
+2019-01-11 15:43:39.331647
+finished training with inception
+
+2019-01-11 15:44:27.159156
+model inception evaluated on test set: acc0.84375, loss0.9017976522445679
+
+2019-01-11 15:44:53.465494
+saved model .. now deleting it .. loading and printing weights
+
+2019-01-11 15:45:47.374738
+loaded model inception evaluated on test set: acc0.84375, loss0.9017976522445679
+
+2019-01-11 15:46:12.603208
+starting training with base model vgg19
+2019-01-11 16:03:08.629765
+starting training with base model vgg19
+2019-01-11 16:04:50.189747
+starting training with base model vgg19
+2019-01-11 16:06:16.272583
+starting training with base model vgg19
+
+2019-01-12 19:45:29.005208
+starting training with base model inception_resnet_v2

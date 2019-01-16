@@ -40,7 +40,15 @@ class MYGenerator(keras.utils.Sequence):
 
             'inception': ka.inception_v3.preprocess_input,
 
-            'vgg19': ka.vgg19.preprocess_input
+            'vgg19': ka.vgg19.preprocess_input,
+
+            'inception_resnet_v2': ka.inception_resnet_v2.preprocess_input,
+
+            'xception': ka.xception.preprocess_input,
+
+            'mobilenet_v2': ka.mobilenet_v2.preprocess_input
+
+
         }
 
         preprocess_fun = base_models[self.preprocess_fun]
