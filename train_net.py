@@ -30,8 +30,8 @@ base_models_1 = {
 }
 
 base_models = {
-    'inception_resnet_v2': (ka.InceptionResNetV2, ' ',
-                 ka.inception_resnet_v2.preprocess_input),
+    # 'inception_resnet_v2': (ka.InceptionResNetV2, ' ',
+    #              ka.inception_resnet_v2.preprocess_input),
 
     'xception': (ka.Xception, r'..\keras-pretrained-models\inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5',
                  ka.xception.preprocess_input),
@@ -114,8 +114,8 @@ if __name__ == '__main__':
         partially_trained_folder = os.path.join(r'./models/partially_trained_models', base_mode_name)
         os.makedirs(partially_trained_folder, exist_ok=True)
         save_models_names_format = os.path.join(partially_trained_folder, base_mode_name +
-                                                '{epoch:02d} -loss {loss:.3f} -acc{acc:.2f} -'
-                                                'val_loss {val_loss: .3f} -val_acc {val_acc:.2f}.hdf5')
+                                                '{epoch:02d} -loss {loss:.3f} -acc{acc:.3f} -'
+                                                'val_loss {val_loss: .3f} -val_acc {val_acc:.3f}.hdf5')
         check_point_callback = keras.callbacks.ModelCheckpoint\
             (save_models_names_format)
 

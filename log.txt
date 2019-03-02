@@ -33,3 +33,21 @@ starting training with base model vgg19
 
 2019-01-12 19:45:29.005208
 starting training with base model inception_resnet_v2
+
+2019-02-18 00:50:34.839847
+starting training with base model xception
+
+2019-02-18 05:42:40.510706
+finished training with xception
+
+2019-02-18 05:43:29.996840
+model xception evaluated on test set: acc0.8125, loss0.6562703847885132
+
+2019-02-18 05:43:47.415712
+saved model .. now deleting it .. loading and printing weights
+
+2019-02-18 05:44:45.709211
+loaded model xception evaluated on test set: acc0.8125, loss0.6562703847885132
+
+2019-02-18 05:45:15.622880
+starting training with base model mobilenet_v2
