@@ -9,3 +9,7 @@ xception
 
 you can read all about it from the following pdf:
 
+
+importing the the trained model into an android app is done in this project:
+https://github.com/mdabbah/DogClassifier2
+
