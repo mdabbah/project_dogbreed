@@ -8,7 +8,7 @@ from data_generator import MYGenerator
 
 if __name__ == '__main__':
 
-    base_dir ='./models/partially_trained_models/*/*'
+    base_dir ='./models_aug/partially_trained_models/*/*'
     models = glob.glob(base_dir)
     for model_path in models:
 
@@ -59,9 +59,9 @@ if __name__ == '__main__':
                                              max_queue_size=32)
 
         n_params = model.count_params()
-        with open('stats.csv', 'a') as log:
+        with open('stats_aug.csv', 'a') as log:
 
-            stats = f'{base_model},{epoch},{acc},{loss},{val_acc},{val_loss},{test_acc},{test_loss}' \
+            stats = f'{base_model}_aug,{epoch},{acc},{loss},{val_acc},{val_loss},{test_acc},{test_loss}' \
                 f',{n_params},{classification_time},\n'
                       # .format(base_model=base_model,
                       #         acc=acc, loss=loss,
